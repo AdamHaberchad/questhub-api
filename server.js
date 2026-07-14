@@ -7,10 +7,13 @@ const authRouter = require('./router/authRoutes')
 
 const app = express();
 app.use(express.json());
-app.use('/api/register/', authRouter);
 
-//pipeline
-app.use(express.json());
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
+app.use('/api/auth/', authRouter);
 
 
 
