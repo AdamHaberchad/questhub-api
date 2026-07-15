@@ -12,6 +12,7 @@ const registrationController = require('../controllers/registrationController');
 //login resources
 const validatelogin = require('../middleware/validateLogin');
 const loginController = require('../controllers/loginController');
+const auth = require('../middleware/auth');
 
 
 //==============GET==============
@@ -39,8 +40,7 @@ router.post('/register', validateRegistration, async (req, res)=>{
 });
 
 //login
-router.post('/login', validatelogin, loginController,  async (req, res)=>{
-})
+router.post('/login', validatelogin, loginController, auth);
 //===============================
 
 
