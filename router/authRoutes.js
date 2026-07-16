@@ -15,9 +15,9 @@ const loginController = require('../controllers/loginController');
 const auth = require('../middleware/auth');
 
 
-//==============GET==============
+// ==============GET==============
 
-//TBD
+// TBD
 
 //===============================
 
@@ -40,7 +40,7 @@ router.post('/register', validateRegistration, async (req, res)=>{
 });
 
 //login
-router.post('/login', validatelogin, loginController, auth);
+router.post('/login', validatelogin, loginController);
 //===============================
 
 

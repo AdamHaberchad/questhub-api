@@ -18,11 +18,6 @@ CREATE TABLE collections (
 CREATE TABLE games (
     gameID SERIAL PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
-    status VARCHAR(30) NOT NULL,
-    rating DECIMAL(3,1),
-    -- collID INTEGER NOT NULL
-    --     REFERENCES collections(collID)
-    --     ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

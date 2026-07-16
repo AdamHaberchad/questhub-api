@@ -4,7 +4,6 @@ const express = require('express');
 const pool = require('./data/databasepg');
 const authRouter = require('./router/authRoutes')
 
-
 const app = express();
 app.use(express.json());
 
