@@ -20,8 +20,20 @@ CREATE TABLE games (
     title VARCHAR(150) NOT NULL,
     status VARCHAR(30) NOT NULL,
     rating DECIMAL(3,1),
+    -- collID INTEGER NOT NULL
+    --     REFERENCES collections(collID)
+    --     ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE collection_games (
     collID INTEGER NOT NULL
         REFERENCES collections(collID)
         ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+
+    gameID INTEGER NOT NULL
+        REFERENCES games(gameID)
+        ON DELETE CASCADE,
+
+    PRIMARY KEY (collID, gameID)
 );
