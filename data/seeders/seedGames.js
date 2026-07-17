@@ -35,4 +35,3 @@ async function seedGames(){
 }
 
 seedGames();
-//module.exports = seedGames;

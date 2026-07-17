@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const pool = require('./data/databasepg');
 const authRouter = require('./router/authRoutes')
+const collectionRouter = require('./router/collectionRoutes');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth/', authRouter);
+app.use('/api/collection/', collectionRouter);
 
 
 

@@ -1,0 +1,15 @@
+controllers/
+    loginController.js
+    registrationController.js
+    collectionController.js
+
+middleware/
+    auth.js
+    logger.js
+    validateLogin.js
+    validateRegistration.js
+    validateCollection.js
+
+router/
+    authRoutes.js
+    collectionRoutes.js
