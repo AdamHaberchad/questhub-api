@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth/', authRouter);
-app.use('/api/collection/', collectionRouter);
+app.use('/api/collections/', collectionRouter);
 
 
 

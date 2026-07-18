@@ -30,12 +30,12 @@ async function validateCollection(req, res, next){ // the actual middleware, it 
     }
     const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
     // const query = 'SELECT * FROM collections WHERE name = $1 WHERE userID = $2;';
-    const values = [req.body.name, req.user.userid];
+    const values = [req.body.name, req.user.userID];
     try{
         const result = await pool.query(query, values);
         if(result.rows.length > 0){
             console.log(`---->validateCollection: There is exist a collection with name: ${req.body.name}`)
-            return res.status(400).send(`There is exist a collection with name: ${req.body.name}`);
+            return res.status(400).send(`Collection: ${req.body.name} already exists`);
         }else{
             console.log(`---->validateCollection: VALID!!`);
             next();
@@ -45,4 +45,42 @@ async function validateCollection(req, res, next){ // the actual middleware, it 
     }
 }
 
-module.exports = validateCollection;
+async function validateCollectionFinder(req, res, next){ 
+    const validator = validateInput(req.body);
+    if(validator.error){
+        return res.status(400).send(validator.error.details[0].message);
+    }
+    const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
+    const values = [req.params.name, req.user.userID];
+    try{
+        const result = await pool.query(query, values);
+        if(result.rows.length > 0){
+            console.log(`---->validateCollectionFinder: Collection: ${req.body.name} already exists`);
+            console.log(`---->validateCollectionFinder: VALID!!`);
+            next();
+        }else{
+            return res.status(400).send(`---->validateCollectionFinder: Collection: ${req.params.name} dosen't exists`);
+        }
+    }catch(error){
+        return res.status(500).send(`---->validateCollectionFinder:something went wrong -details: ${error.message}`);
+    }
+}
+
+async function validateCollectionDelete(req, res, next){ 
+    const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
+    const values = [req.params.name, req.user.userID];
+    try{
+        const result = await pool.query(query, values);
+        if(result.rows.length > 0){
+            console.log(`---->validateCollectionFinder: Collection: ${req.body.name} already exists`);
+            console.log(`---->validateCollectionFinder: VALID!!`);
+            next();
+        }else{
+            return res.status(400).send(`---->validateCollectionFinder: Collection: ${req.params.name} dosen't exists`);
+        }
+    }catch(error){
+        return res.status(500).send(`---->validateCollectionFinder:something went wrong -details: ${error.message}`);
+    }
+}
+
+module.exports = {validateCollection, validateCollectionFinder, validateCollectionDelete};
