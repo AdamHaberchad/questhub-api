@@ -9,7 +9,6 @@ const auth = require('../middleware/auth');
 
 
 
-
 //==============GET==============
 //get all collections
 router.get('/', auth, displayCollections);
@@ -18,7 +17,6 @@ router.get('/', auth, displayCollections);
 router.get('/:name', auth, getCollectionByName);
 
 //==============POST==============
-
 //create a collection
 router.post('/', auth, validateCollection, insertCollController);
 
@@ -26,11 +24,8 @@ router.post('/', auth, validateCollection, insertCollController);
 //change name of the collections name only
 router.put('/:name', auth, validateCollectionFinder, updateCollController);
 
-
-
 //==============DELETE==============
 router.delete('/:name', auth, validateCollectionDelete, deleteCollController);
-
 
 
 module.exports = router;

@@ -87,5 +87,4 @@ async function deleteCollController(req, res){
     }
 }
 
-
 module.exports = {insertCollController, displayCollections, getCollectionByName, updateCollController, deleteCollController};

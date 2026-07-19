@@ -46,6 +46,7 @@ async function validateCollection(req, res, next){ // the actual middleware, it 
 }
 
 async function validateCollectionFinder(req, res, next){ 
+    req.toBeInserted = {};
     const validator = validateInput(req.body);
     if(validator.error){
         return res.status(400).send(validator.error.details[0].message);
@@ -55,6 +56,7 @@ async function validateCollectionFinder(req, res, next){
     try{
         const result = await pool.query(query, values);
         if(result.rows.length > 0){
+            req.toBeInserted.collID = result.rows[0].collID;
             console.log(`---->validateCollectionFinder: Collection: ${req.body.name} already exists`);
             console.log(`---->validateCollectionFinder: VALID!!`);
             next();
@@ -83,4 +85,36 @@ async function validateCollectionDelete(req, res, next){
     }
 }
 
-module.exports = {validateCollection, validateCollectionFinder, validateCollectionDelete};
+async function Validate_Find_Collection(req, res, next){ 
+    //no req.body
+    
+    req.toBeInserted = {
+        collID: null,
+        gameID: null
+    };
+    const objTitle = {
+        name: req.params.name
+    }
+    const validator = validateInput(objTitle);
+    if(validator.error){
+        return res.status(400).send(validator.error.details[0].message);
+    }
+    const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
+    const values = [req.params.name, req.user.userID];
+    try{
+        const result = await pool.query(query, values);
+        if(result.rows.length > 0){
+            req.toBeInserted.collID = result.rows[0].collid;
+            console.log(`---->validateCollectionFinder: Collection: ${req.params.name} already exists`);
+            console.log(`---->validateCollectionFinder: VALID!!`);
+            next();
+        }else{
+            return res.status(400).send(`---->validateCollectionFinder: Collection: ${req.params.name} dosen't exists`);
+        }
+    }catch(error){
+        return res.status(500).send(`---->validateCollectionFinder:something went wrong -details: ${error.message}`);
+    }
+}
+
+
+module.exports = {validateCollection, validateCollectionFinder, validateCollectionDelete, Validate_Find_Collection};

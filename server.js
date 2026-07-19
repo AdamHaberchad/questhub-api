@@ -4,7 +4,7 @@ const express = require('express');
 const pool = require('./data/databasepg');
 const authRouter = require('./router/authRoutes')
 const collectionRouter = require('./router/collectionRoutes');
-
+const gameCollectionRouter = require('./router/gamesCollectionRoutes');
 const app = express();
 app.use(express.json());
 
@@ -15,6 +15,7 @@ app.use((req, res, next) => {
 
 app.use('/api/auth/', authRouter);
 app.use('/api/collections/', collectionRouter);
+app.use('/api/gameCollections', gameCollectionRouter)
 
 
 
