@@ -87,7 +87,6 @@ async function validateCollectionDelete(req, res, next){
 
 async function Validate_Find_Collection(req, res, next){ 
     //no req.body
-    
     req.toBeInserted = {
         collID: null,
         gameID: null
@@ -116,5 +115,33 @@ async function Validate_Find_Collection(req, res, next){
     }
 }
 
+async function collvalidation(req, res, next){ 
+    //no req.body
+    req.idResources = {
+        collID: null,
+        gameID: null
+    };
+    const objCollName = {
+        name: req.params.name
+    }
+    const validator = validateInput(objCollName);
+    if(validator.error){
+        return res.status(400).send(validator.error.details[0].message);
+    }
+    const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
+    const values = [req.params.name, req.user.userID];
+    try{
+        const result = await pool.query(query, values);
+        if(result.rows.length > 0){
+            req.idResources.collID = result.rows[0].collid;
+            next();
+        }else{
+            return res.status(400).send(`---->collDisplayValidation: Collection: ${req.params.name} dosen't exists`);
+        }
+    }catch(error){
+        return res.status(500).send(`---->collDisplayValidation:something went wrong -details: ${error.message}`);
+    }
+}
 
-module.exports = {validateCollection, validateCollectionFinder, validateCollectionDelete, Validate_Find_Collection};
+
+module.exports = {validateCollection, validateCollectionFinder, validateCollectionDelete, Validate_Find_Collection, collvalidation};

@@ -72,29 +72,23 @@ async function validateGame(req, res, next){
     return;
 }
 
-//context (req.toBeInserted)from another file:
-/*
-async function validateCollectionFinder(req, res, next){ 
-    req.toBeInserted = {};
-    const validator = validateInput(req.body);
-    if(validator.error){
-        return res.status(400).send(validator.error.details[0].message);
+async function validateGameD(req, res, next){
+    const inputValidator = validateGameInput(req.params.title);
+    if(!inputValidator.isValid){
+        return res.status(400).send(`Invalid input: ${inputValidator.error.details[0].message}`);
     }
-    const query = 'SELECT * FROM collections WHERE name = $1 AND userID = $2';
-    const values = [req.params.name, req.user.userID];
-    try{
-        const result = await pool.query(query, values);
-        if(result.rows.length > 0){
-            req.toBeInserted.collID = result.rows[0].collID;
-            console.log(`---->validateCollectionFinder: Collection: ${req.body.name} already exists`);
-            console.log(`---->validateCollectionFinder: VALID!!`);
-            next();
-        }else{
-            return res.status(400).send(`---->validateCollectionFinder: Collection: ${req.params.name} dosen't exists`);
-        }
-    }catch(error){
-        return res.status(500).send(`---->validateCollectionFinder:something went wrong -details: ${error.message}`);
+    const isFound = await getGameByTitle(req.params.title);
+    if(isFound.error){
+        return res.status(500).send(`Something went wrong\nDetails: ${isFound.error.message}`);
     }
+    if(!isFound.game){
+        return res.status(404).send(`Game: ${req.params.title} doesn't exist!`);
+    }
+    req.idResources.gameID = isFound.game.gameid;
+    console.log("---->validateGame: done successfully");
+    next();
+    return;
 }
-*/
-module.exports = validateGame;
+
+
+module.exports = {validateGame, validateGameD};
